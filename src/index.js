@@ -8,9 +8,12 @@ function Mk20edo(){
               "aAsSdDfFgGhHjJkKlL;:" +
               "qQwWeErRtTyYuUiIoOpP";
 
+  const lut2 = "123456789";
+
   const s = Math.log(2.0)/20;
-  const zFreq = 440.0;
+  const zFreq = 130.8128;
   this.lut = lut;
+  this.lut2 = lut2;
   this.s = s;
   this.zFreq = zFreq;
   this.synth = synth;
@@ -18,11 +21,19 @@ function Mk20edo(){
 
 Mk20edo.prototype = {
   KeyDown: function(event){
-    const i = this.lut.indexOf(event.key);
+    let i = null;
+    i = this.lut.indexOf(event.key);
 
     if (i >= 0){
-      const freq = (1.0 + Math.exp(i * this.s)) * this.zFreq;
+      const freq = Math.exp(i * this.s) * this.zFreq;
       this.synth.triggerAttackRelease(freq, "8n");
+      return;
+    }
+
+    i = this.lut2.indexOf(event.key);
+
+    if (i >= 0){
+      this.zFreq = Math.exp(i * 20 * this.s) * 16.35160;
     }
   }
 };
